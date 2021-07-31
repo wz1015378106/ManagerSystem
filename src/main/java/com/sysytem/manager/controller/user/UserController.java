@@ -1,11 +1,13 @@
 package com.sysytem.manager.controller.user;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.sysytem.manager.common.PageUtils;
 import com.sysytem.manager.common.Query;
 import com.sysytem.manager.common.Result;
 import com.sysytem.manager.entity.user.UserEntity;
 import com.sysytem.manager.service.user.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -61,20 +63,48 @@ public class UserController {
     }
 
     /**
-     * 注销用户
+     * 冻结用户
      * @param id
      * @return
      */
     @DeleteMapping("deleteById/{id}")
-    @ApiOperation(value = "注销用户",response = Result.class)
+    @ApiOperation(value = "冻结用户",response = Result.class)
     public Result deleteById(@PathVariable("id") String id){
         return userService.deleteById(id);
     }
 
+    /**
+     * 鉴权接口
+     * @param request
+     * @return
+     */
     @GetMapping("auth")
     @ApiOperation(value = "鉴权，判断用户当前会话是否离线",response = Result.class)
     public Result auth(HttpServletRequest request){
         Object userInfo = request.getSession().getAttribute("userInfo");
+        return Result.ok().put("data",userInfo);
+    }
+
+
+    @GetMapping("logout")
+    @ApiOperation(value = "注销")
+    public Result logout(HttpServletRequest request){
+        request.getSession().removeAttribute("userInfo");
+        return Result.ok();
+    }
+
+    /**
+     * 获取当前登录用户信息
+     * @param request
+     * @return
+     */
+    @GetMapping("getCurrentUserInfo")
+    @ApiOperation(value = "获取当前登录用户登录信息")
+    public Result getCurrentUserInfo(HttpServletRequest request){
+        Object userInfo = request.getSession().getAttribute("userInfo");
+        if (ObjectUtil.isNull(userInfo)){
+            return Result.error(401,"未登录");
+        }
         return Result.ok().put("data",userInfo);
     }
 

@@ -45,15 +45,25 @@ public class UserEntity implements Serializable {
     @Column(name = "USER_CODE")
     private String userCode;
     /**
-     * 角色id
+     * 角色id(主)
      */
-    @Column(name = "ROLE_ID")
+    @Column(name = "MAIN_ROLE_ID")
     private String roleId;
+    /**
+     * 有效标识
+     */
     @Column(name = "ENABLED_FLAG")
     private String enabledFlag;
+    /**
+     * 创建时间
+     */
     @Column(name = "CREATE_DATE")
     private String createDate;
-
+    /**
+     * 角色（副）
+     */
+    @Column(name = "ASSIST_ROLE_ID")
+    private String assistRoleId;
 
     public String getId() {
         return id;
@@ -126,4 +136,13 @@ public class UserEntity implements Serializable {
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
+
+    public String getAssistRoleId() {
+        return assistRoleId;
+    }
+
+    public void setAssistRoleId(String assistRoleId) {
+        this.assistRoleId = assistRoleId;
+    }
+
 }
