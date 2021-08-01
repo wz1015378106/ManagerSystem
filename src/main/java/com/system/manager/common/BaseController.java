@@ -28,6 +28,11 @@ public class BaseController {
         return getUser().getUserName();
     }
 
+    //获取用户Id
+    public String getUserId() {
+        return getUser().getId();
+    }
+
     public UserEntity getUser(){
         HttpSession session = getSession();
         UserEntity user = (UserEntity) session.getAttribute(AuthConstants.USER_INFO);

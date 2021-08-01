@@ -1,5 +1,6 @@
 package com.system.manager.entity.biaoshu;
 
+import com.system.manager.entity.user.UserEntity;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -49,23 +50,52 @@ public class BiaoShuEntity {
     /**
      * 承担人
      */
-    @Column(name = "undertaker")
-    private String undertaker;
+    @OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "user_id",insertable = false,updatable = false)
+    private UserEntity userEntity;
+
+    /**
+     * 承担人id
+     */
+    @Column(name = "user_id")
+    private String userId;
+    /**
+     * 承当人用户名
+     */
+    private String userName;
     /**
      *金额
      */
     @Column(name = "money")
     private BigDecimal money;
     /**
-     * 创建人
+     * 付款日期字符串
      */
-    @Column(name = "create_time")
-    private Date createTime;
+    private String payTimeStr;
+    /**
+     * 付款日期
+     */
+    @Column(name = "pay_time")
+    private Date payTime;
     /**
      * 创建时间
      */
+    @Column(name = "create_time")
+    private Date createTime;
+
+    /**
+     * 创建时间字符串
+     */
+    private String createTimeStr;
+    /**
+     * 创建人
+     */
     @Column(name = "create_by")
     private String createBy;
+    /**
+     * 修改时间字符串
+     */
+    private String updateTimeStr;
     /**
      * 修改时间
      */
