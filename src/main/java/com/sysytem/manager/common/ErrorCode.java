@@ -9,14 +9,14 @@ import lombok.Data;
  * @date: 2021/7/23 19:44
  */
 public enum ErrorCode {
-
+    SYSTEM_EXCEPTION(500,"系统异常"),
     PRODUCT_VIDEO_SIZE_LIMIT_ERROR(801006, "数量超过限制")
     ;
 
     private Integer code;
     private String message;
 
-    private ErrorCode(Integer code, String message) {
+    ErrorCode(Integer code, String message) {
         this.code = code;
         this.message = message;
     }

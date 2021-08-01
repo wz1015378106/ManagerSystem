@@ -4,6 +4,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.sysytem.manager.common.AuthConstants;
 import com.sysytem.manager.common.PageUtils;
 import com.sysytem.manager.common.Query;
 import com.sysytem.manager.common.Result;
@@ -52,8 +53,8 @@ public class UserService {
                 return Result.error("当前用户已被冻结");
             }
             //将用户登录信息放入session中
-            request.getSession().setAttribute("userInfo", userEntity);
-            return Result.ok().put("data", userEntity);
+            request.setAttribute(AuthConstants.USER_INFO,userEntity);
+            return Result.ok().put("data",userEntity);
         }
         return Result.error("用户名或密码错误");
     }

@@ -71,6 +71,12 @@ public class Result extends HashMap<String, Object> {
         r.put(MSG,ERROR_MSG);
         return r;
     }
+    public static Result error(ErrorCode error) {
+        Result r = new Result();
+        r.put(CODE,error.getCode());
+        r.put(MSG,error.getMessage());
+        return r;
+    }
 
 
     /**
