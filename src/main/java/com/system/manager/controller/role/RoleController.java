@@ -4,6 +4,7 @@ import com.system.manager.common.Query;
 import com.system.manager.common.Result;
 import com.system.manager.entity.role.RoleEntity;
 import com.system.manager.service.role.RoleService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("role")
+@Api(tags = "角色信息")
 public class RoleController {
     @Autowired
     private RoleService roleService;

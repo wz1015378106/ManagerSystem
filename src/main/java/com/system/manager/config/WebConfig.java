@@ -3,6 +3,7 @@ package com.system.manager.config;
 import com.system.manager.interceptor.AuthInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,9 +18,12 @@ import java.util.List;
  * @Description:
  * @date: 2021/7/23 16:38
  */
+@Configuration
 public class WebConfig implements WebMvcConfigurer {
-    @Autowired
-    private AuthInterceptor authInterceptor;
+    @Bean
+    public AuthInterceptor authInterceptor() {
+        return new AuthInterceptor();
+    }
     //跨域配置
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -30,7 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
                 //添加映射路径
                 registry.addMapping("/**")
                         //放行哪些原始域
-                        .allowedOrigins("*")
+                        .allowedOriginPatterns("*")
                         //是否发送Cookie信息
                         .allowCredentials(true)
                         //放行哪些原始域(请求方式)
@@ -49,11 +53,16 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration interceptorRegistration = registry.addInterceptor(authInterceptor);
-        //拦截路径
-        interceptorRegistration.addPathPatterns("/*");
-        //设置不拦截的路径
-        List<String> excloudPath = new ArrayList<>();
-        excloudPath.add("/user/login");
+        // 放行路径
+        List<String> patterns = new ArrayList();
+        patterns.add("/webjars/**");
+        patterns.add("/druid/**");
+        patterns.add("/sys/login");
+        patterns.add("/swagger/**");
+        patterns.add("/v2/api-docs");
+        patterns.add("/swagger-ui.html");
+        patterns.add("/swagger-resources/**");
+        patterns.add("/user/login");
+        registry.addInterceptor(authInterceptor()).addPathPatterns("/**").excludePathPatterns(patterns);
     }
 }
