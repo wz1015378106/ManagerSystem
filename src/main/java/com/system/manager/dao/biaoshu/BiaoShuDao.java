@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  * @date: 2021/8/1 17:10
  */
 @Repository
-public interface BiaoShuDao extends JpaRepository<BiaoShuEntity,Integer>, JpaSpecificationExecutor<BiaoShuEntity> {
+public interface BiaoShuDao extends JpaRepository<BiaoShuEntity,String>, JpaSpecificationExecutor<BiaoShuEntity> {
 }

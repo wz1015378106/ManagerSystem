@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 public class MyException extends RuntimeException{
+    private final static Integer errorCode = 500;
     private Integer code;
     private String message;
 
@@ -22,6 +23,11 @@ public class MyException extends RuntimeException{
     public MyException(Integer code, String message){
         super(message);
         this.setCode(code);
+        this.setMessage(message);
+    }
+    public MyException(String message){
+        super(message);
+        this.setCode(errorCode);
         this.setMessage(message);
     }
 }

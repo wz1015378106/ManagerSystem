@@ -69,6 +69,11 @@ public class BiaoShuEntity {
     @Column(name = "money")
     private BigDecimal money;
     /**
+     * 状态，0未付款，1已付款
+     */
+    @Column(name = "status")
+    private Integer status;
+    /**
      * 付款日期字符串
      */
     private String payTimeStr;

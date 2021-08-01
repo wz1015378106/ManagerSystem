@@ -33,6 +33,11 @@ public class BaseController {
         return getUser().getId();
     }
 
+    //获取用户角色ID
+    public String getRoleId() {
+        return getUser().getRoleId();
+    }
+
     public UserEntity getUser(){
         HttpSession session = getSession();
         UserEntity user = (UserEntity) session.getAttribute(AuthConstants.USER_INFO);
