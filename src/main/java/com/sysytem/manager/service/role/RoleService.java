@@ -1,8 +1,10 @@
 package com.sysytem.manager.service.role;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.sysytem.manager.common.PageUtils;
 import com.sysytem.manager.common.Query;
 import com.sysytem.manager.common.Result;
@@ -80,6 +82,46 @@ public class RoleService {
             roleMenuEntityList.add(roleMenuEntity);
         });
         roleMenuDao.saveAll(roleMenuEntityList);
+        return Result.ok();
+    }
+
+    /**
+     * 删除角色
+     * @param roleId
+     * @return
+     */
+    public Result deleteRole(String roleId){
+        if (StrUtil.isBlank(roleId)){
+            return Result.ok();
+        }
+        //先删除角色和菜单关联关系
+        roleMenuDao.deleteByRoleId(roleId);
+        //删除当前角色
+        roleDao.deleteById(roleId);
+        return Result.ok();
+    }
+    public Result updateRole(RoleEntity roleEntity){
+        String roleId = roleEntity.getId();
+        if (StrUtil.isBlank(roleId)){
+            return Result.error("角色ID不能为空");
+        }
+        //修改角色
+        RoleEntity save = roleDao.save(roleEntity);
+        //先删除角色菜单关联关系， 再更新关联关系
+        List<String> menuList = roleEntity.getMenuList();
+        if (CollUtil.isNotEmpty(menuList)){
+            roleMenuDao.deleteByRoleId(roleId);
+            String newRoleId = save.getId();
+            //构造新的关联关系
+            List<RoleMenuEntity> list = new ArrayList<RoleMenuEntity>(menuList.size());
+            menuList.forEach(menuId->{
+                RoleMenuEntity roleMenuEntity = new RoleMenuEntity();
+                roleMenuEntity.setMenuId(menuId);
+                roleMenuEntity.setRoleId(roleId);
+                list.add(roleMenuEntity);
+            });
+            roleMenuDao.saveAll(list);
+        }
         return Result.ok();
     }
 }
