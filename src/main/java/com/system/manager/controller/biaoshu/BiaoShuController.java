@@ -1,19 +1,17 @@
 package com.system.manager.controller.biaoshu;
 
 import cn.hutool.core.util.StrUtil;
-import com.system.manager.common.BaseController;
-import com.system.manager.common.MyException;
-import com.system.manager.common.Result;
+import com.system.manager.common.*;
 import com.system.manager.service.biaoshu.BiaoShuService;
 import com.system.manager.entity.biaoshu.BiaoShuEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author: wangzhi
@@ -45,7 +43,7 @@ public class BiaoShuController extends BaseController {
         if (StrUtil.isBlank(biaoShuEntity.getBankOfDeposit())){
             throw new MyException(500,"对方开户行必填！");
         }
-        if (StrUtil.isBlank(biaoShuEntity.getUndertaker())){
+        if (StrUtil.isBlank(biaoShuEntity.getUserId())){
             throw new MyException(500,"承担人必填！");
         }
         if (biaoShuEntity.getMoney() == null){
@@ -57,5 +55,16 @@ public class BiaoShuController extends BaseController {
         biaoShuEntity.setUpdateBy(getUserName());
         biaoShuService.add(biaoShuEntity);
         return Result.ok();
+    }
+
+    @GetMapping("queryPage")
+    @ApiOperation(value = "分页查询标书单")
+    public Result queryPage(@RequestParam(required = false) Map<String,Object> params){
+        if (params == null){
+            params = new LinkedHashMap<>();
+        }
+        params.put("userId",getUserId());
+        PageUtils page = biaoShuService.queryPage(new Query(params));
+        return Result.ok().put("page",page);
     }
 }
