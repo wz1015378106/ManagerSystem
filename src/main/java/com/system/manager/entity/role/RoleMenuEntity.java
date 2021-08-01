@@ -3,13 +3,14 @@ package com.system.manager.entity.role;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * 角色菜单映射表
  */
 @Entity
 @Table(name = "role_menu")
-public class RoleMenuEntity {
+public class RoleMenuEntity implements Serializable {
     /**
      * 主键ID
      */

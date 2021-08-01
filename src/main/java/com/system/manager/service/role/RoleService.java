@@ -5,19 +5,12 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.sysytem.manager.common.PageUtils;
-import com.sysytem.manager.common.Query;
-import com.sysytem.manager.common.Result;
-import com.sysytem.manager.dao.role.RoleDao;
-import com.sysytem.manager.dao.role.RoleMenuDao;
-import com.sysytem.manager.entity.role.RoleEntity;
-import com.sysytem.manager.entity.role.RoleMenuEntity;
-import com.sysytem.manager.entity.user.UserEntity;
 import com.system.manager.common.PageUtils;
 import com.system.manager.common.Query;
 import com.system.manager.common.Result;
 import com.system.manager.dao.role.RoleDao;
 import com.system.manager.dao.role.RoleMenuDao;
+import com.system.manager.dao.user.UserDao;
 import com.system.manager.entity.role.RoleEntity;
 import com.system.manager.entity.role.RoleMenuEntity;
 import com.system.manager.entity.user.UserEntity;
@@ -25,9 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +41,8 @@ public class RoleService {
     private RoleDao roleDao;
     @Autowired
     private RoleMenuDao roleMenuDao;
+    @Autowired
+    private UserDao userDao;
     /**
      * 分页查询角色
      * @param query
@@ -50,9 +50,29 @@ public class RoleService {
      */
     public Result page(Query query){
         Pageable pageable = query.getPageable(Sort.Direction.DESC, "createDate");
-        Page<RoleEntity> all = roleDao.findAll(pageable);
+        Specification<RoleEntity> specification = splingCondition(query);
+        Page<RoleEntity> all = roleDao.findAll(specification,pageable);
         PageUtils pageUtils = new PageUtils(all);
         return Result.ok().put("page",pageUtils);
+    }
+
+    private Specification<RoleEntity> splingCondition(Query query){
+        String roleCode = (String) query.get("roleCode");
+        String roleName = (String) query.get("roleName");
+        Specification<RoleEntity> specification = new Specification() {
+            List<Predicate> predicates = new ArrayList<>();
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder cb) {
+                if (StrUtil.isNotBlank(roleCode)){
+                    predicates.add(cb.like(root.<String>get("roleCode"),roleCode));
+                }
+                if (StrUtil.isNotBlank(roleName)){
+                    predicates.add(cb.like(root.<String>get("roleName"),roleName));
+                }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        return specification;
     }
 
     /**
@@ -103,10 +123,24 @@ public class RoleService {
         }
         //先删除角色和菜单关联关系
         roleMenuDao.deleteByRoleId(roleId);
+        //删除用户主角色，副角色暂时不启用（需要再做优化）
+        List<UserEntity> userEntities = userDao.findUserByRoleId(roleId);
+        List<UserEntity> newUserEntities = new ArrayList<>(userEntities.size());
+        userEntities.forEach(user->{
+            user.setRoleId(null);
+            newUserEntities.add(user);
+        });
+        userDao.saveAll(newUserEntities);
         //删除当前角色
         roleDao.deleteById(roleId);
         return Result.ok();
     }
+
+    /**
+     * 更新角色
+     * @param roleEntity
+     * @return
+     */
     public Result updateRole(RoleEntity roleEntity){
         String roleId = roleEntity.getId();
         if (StrUtil.isBlank(roleId)){

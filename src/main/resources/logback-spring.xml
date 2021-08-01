@@ -3,6 +3,8 @@
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <!-- 日志存储路径-->
+    <springProperty scope="context" name="LOG_HOME" source="log.path"/>
     <!--输出日志格式-->
     <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -26,7 +28,7 @@
         <!--滚动输出策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>/usr/manager/info.%d.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/info.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -43,7 +45,7 @@
         <!--滚动输出策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>/usr/manager/error.%d.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/error.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 

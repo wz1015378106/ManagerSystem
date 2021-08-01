@@ -1,8 +1,15 @@
 package com.system.manager.config;
 
+import com.system.manager.interceptor.AuthInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: wangzhi
@@ -11,6 +18,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @date: 2021/7/23 16:38
  */
 public class WebConfig implements WebMvcConfigurer {
+    @Autowired
+    private AuthInterceptor authInterceptor;
     //跨域配置
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -32,5 +41,19 @@ public class WebConfig implements WebMvcConfigurer {
                         .exposedHeaders("Header1", "Header2");
             }
         };
+    }
+
+    /**
+     * 注册登录拦截器
+     * @param registry
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        InterceptorRegistration interceptorRegistration = registry.addInterceptor(authInterceptor);
+        //拦截路径
+        interceptorRegistration.addPathPatterns("/*");
+        //设置不拦截的路径
+        List<String> excloudPath = new ArrayList<>();
+        excloudPath.add("/user/login");
     }
 }

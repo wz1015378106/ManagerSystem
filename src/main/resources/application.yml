@@ -36,4 +36,7 @@ spring:
         jdbc:
           batch_size: 500
 server:
-  port: 8080
+  port: 8899
+log.path:
+  /home/log
+  #/Users/huyi/java_code/ManagerSystem/log

@@ -1,6 +1,7 @@
 package com.system.manager.controller.user;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.system.manager.common.AuthConstants;
 import com.system.manager.common.PageUtils;
 import com.system.manager.common.Query;
 import com.system.manager.common.Result;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
@@ -35,8 +37,8 @@ public class UserController {
      */
     @PostMapping("login")
     @ApiOperation(value = "用户登录",response = Result.class)
-    public Result login(@RequestBody Map<String,Object> params, HttpServletRequest request){
-        return userService.login(params,request);
+    public Result login(@RequestBody Map<String,Object> params, HttpServletRequest request, HttpServletResponse response){
+        return userService.login(params,request,response);
     }
 
     /**
@@ -80,15 +82,15 @@ public class UserController {
     @GetMapping("auth")
     @ApiOperation(value = "鉴权，判断用户当前会话是否离线",response = Result.class)
     public Result auth(HttpServletRequest request){
-        Object userInfo = request.getSession().getAttribute("userInfo");
+        Object userInfo = request.getSession().getAttribute(AuthConstants.USER_INFO);
         return Result.ok().put("data",userInfo);
     }
 
 
     @GetMapping("logout")
     @ApiOperation(value = "注销")
-    public Result logout(HttpServletRequest request){
-        request.getSession().removeAttribute("userInfo");
+    public Result logout(HttpServletRequest request,HttpServletResponse reponse){
+        userService.loginOut(request,reponse);
         return Result.ok();
     }
 
@@ -100,11 +102,22 @@ public class UserController {
     @GetMapping("getCurrentUserInfo")
     @ApiOperation(value = "获取当前登录用户登录信息")
     public Result getCurrentUserInfo(HttpServletRequest request){
-        Object userInfo = request.getSession().getAttribute("userInfo");
+        Object userInfo = request.getSession().getAttribute(AuthConstants.USER_INFO);
         if (ObjectUtil.isNull(userInfo)){
             return Result.error(401,"未登录");
         }
         return Result.ok().put("data",userInfo);
+    }
+    @ApiOperation(value = "解冻用户")
+    @PutMapping("recoverUser/{userId}")
+    public Result recoverUser(@PathVariable("userId") String userId){
+        return userService.recoverUser(userId);
+    }
+
+    @ApiOperation(value = "重制密码")
+    @PutMapping("resetPassword/{userId}")
+    public Result resetPassword(@PathVariable("userId") String userId){
+        return userService.resetPassword(userId);
     }
 
 }

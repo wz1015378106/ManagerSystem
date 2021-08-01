@@ -1,14 +1,13 @@
-package com.system.manager.entity.role;
+package com.system.manager.entity.menu;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
-@Table(name = "role")
-public class RoleEntity implements Serializable {
+@Table(name = "menu")
+public class MenuEntity implements Serializable {
     /**
      * 主键ID
      */
@@ -18,15 +17,15 @@ public class RoleEntity implements Serializable {
     @GeneratedValue(generator="idGenerator")
     private String id;
     /**
-     * 角色编码
+     * 菜单编码
      */
-    @Column(name = "ROLE_CODE")
-    private String roleCode;
+    @Column(name = "MENU_CODE")
+    private String menuCode;
     /**
-     * 角色名称
+     * 菜单名称
      */
-    @Column(name = "ROLE_NAME")
-    private String roleName;
+    @Column(name = "MENU_NAME")
+    private String menuName;
     /**
      * 创建人
      */
@@ -43,10 +42,10 @@ public class RoleEntity implements Serializable {
     @Column(name = "ENABLED_FLAG")
     private String enabledFlag;
     /**
-     * 角色的菜单资源
+     * 菜单路径
      */
-    @Transient
-    private List<String> menuList;
+    @Column(name = "MENU_URL")
+    private String menuUrl;
 
     public String getId() {
         return id;
@@ -56,20 +55,20 @@ public class RoleEntity implements Serializable {
         this.id = id;
     }
 
-    public String getRoleCode() {
-        return roleCode;
+    public String getMenuCode() {
+        return menuCode;
     }
 
-    public void setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
+    public void setMenuCode(String menuCode) {
+        this.menuCode = menuCode;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getMenuName() {
+        return menuName;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
     }
 
     public String getCreateBy() {
@@ -96,11 +95,11 @@ public class RoleEntity implements Serializable {
         this.enabledFlag = enabledFlag;
     }
 
-    public List<String> getMenuList() {
-        return menuList;
+    public String getMenuUrl() {
+        return menuUrl;
     }
 
-    public void setMenuList(List<String> menuList) {
-        this.menuList = menuList;
+    public void setMenuUrl(String menuUrl) {
+        this.menuUrl = menuUrl;
     }
 }
