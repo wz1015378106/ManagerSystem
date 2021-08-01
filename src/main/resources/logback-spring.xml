@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
     <!--输出日志格式-->
     <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %d - %msg%n
+                ${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}
             </pattern>
         </layout>
     </appender>
@@ -17,7 +20,7 @@
         </filter>
         <encoder>
             <pattern>
-                [%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p] [%t] (%c:%L) - %m%n
+                ${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%15t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}
             </pattern>
         </encoder>
         <!--滚动输出策略-->
@@ -34,7 +37,7 @@
         </filter>
         <encoder>
             <pattern>
-                [%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p] [%t] (%c:%L) - %m%n
+                ${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%15t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}
             </pattern>
         </encoder>
         <!--滚动输出策略-->

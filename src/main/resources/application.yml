@@ -35,3 +35,5 @@ spring:
         order_insert: true
         jdbc:
           batch_size: 500
+server:
+  port: 8080
