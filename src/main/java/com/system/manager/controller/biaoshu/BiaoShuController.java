@@ -67,7 +67,7 @@ public class BiaoShuController extends BaseController {
         PageUtils page = biaoShuService.queryPage(new Query(params));
         return Result.ok().put("page",page);
     }
-    @GetMapping("queryPage")
+    @GetMapping("delete")
     @ApiOperation(value = "删除标书款")
     public Result delete(String id){
         if (StrUtil.isEmpty(id)){
