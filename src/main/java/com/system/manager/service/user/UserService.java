@@ -9,7 +9,10 @@ import com.system.manager.common.AuthConstants;
 import com.system.manager.common.PageUtils;
 import com.system.manager.common.Query;
 import com.system.manager.common.Result;
+import com.system.manager.dao.menu.MenuDao;
+import com.system.manager.dao.menu.RoleMenuVDao;
 import com.system.manager.dao.user.UserDao;
+import com.system.manager.entity.menu.RoleMenuVEntity;
 import com.system.manager.entity.user.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +37,8 @@ import java.util.*;
 public class UserService {
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private RoleMenuVDao roleMenuVDao;
 
     /**
      * 分页查询用户
@@ -201,5 +206,20 @@ public class UserService {
     public Result recoverUser(String roleId){
         userDao.recoverUser(roleId);
         return Result.ok();
+    }
+
+    /**
+     * 查询当前登录用户菜单权限
+     * @return
+     */
+    public Result findCurrentUserMenu(HttpSession session){
+        //当前用户
+        UserEntity currentUser = (UserEntity)session.getAttribute(AuthConstants.USER_INFO);
+        if (ObjectUtil.isNull(currentUser)){
+            return Result.error(401,"未登录");
+        }
+        String roleId = currentUser.getRoleId();
+        RoleMenuVEntity roleMenuVEntity = roleMenuVDao.findByRoleId(roleId);
+        return Result.ok().put("data",roleMenuVEntity);
     }
 }

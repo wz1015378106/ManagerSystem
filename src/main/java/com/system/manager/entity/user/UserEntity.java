@@ -64,6 +64,11 @@ public class UserEntity implements Serializable {
      */
     @Column(name = "ASSIST_ROLE_ID")
     private String assistRoleId;
+    /**
+     * 用户所在部门
+     */
+    @Column(name = "DEPT_ID")
+    private String deptId;
 
     public String getId() {
         return id;
@@ -145,4 +150,11 @@ public class UserEntity implements Serializable {
         this.assistRoleId = assistRoleId;
     }
 
+    public String getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(String deptId) {
+        this.deptId = deptId;
+    }
 }

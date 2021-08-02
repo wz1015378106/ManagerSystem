@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
@@ -118,6 +119,17 @@ public class UserController {
     @PutMapping("resetPassword/{userId}")
     public Result resetPassword(@PathVariable("userId") String userId){
         return userService.resetPassword(userId);
+    }
+
+    /**
+     * 查询当前用户菜单权限
+     * @param session
+     * @return
+     */
+    @ApiOperation(value = "查询当前用户菜单权限")
+    @GetMapping("findCurrentUserMenu")
+    public Result findCurrentUserMenu(HttpSession session){
+        return userService.findCurrentUserMenu(session);
     }
 
 }

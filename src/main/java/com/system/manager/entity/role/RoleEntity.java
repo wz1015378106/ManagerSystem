@@ -43,10 +43,17 @@ public class RoleEntity implements Serializable {
     @Column(name = "ENABLED_FLAG")
     private String enabledFlag;
     /**
+     * 查看数据权限，0 全部数据 1 自己的数据
+     */
+   /* @Column(name = "FIND_DATA_PERMISSION")
+    private String findDataPermission;*/
+
+    /**
      * 角色的菜单资源
      */
     @Transient
     private List<String> menuList;
+
 
     public String getId() {
         return id;
