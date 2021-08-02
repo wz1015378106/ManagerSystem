@@ -3,10 +3,13 @@ package com.system.manager.service.biaoshu;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.system.manager.common.MyException;
 import com.system.manager.common.PageUtils;
 import com.system.manager.common.Query;
 import com.system.manager.dao.biaoshu.BiaoShuDao;
 import com.system.manager.entity.biaoshu.BiaoShuEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +31,7 @@ import java.util.List;
  * @date: 2021/8/1 17:16
  */
 @Service
+@Slf4j
 public class BiaoShuService {
     @Autowired
     private BiaoShuDao biaoShuDao;
@@ -75,5 +79,17 @@ public class BiaoShuService {
             }
         }
         return new PageUtils(all);
+    }
+
+    public void delete(String id){
+        BiaoShuEntity biaoShuEntity = biaoShuDao.getById(id);
+        if (biaoShuEntity == null){
+            throw new MyException("当前标书款已删除！");
+        }
+        if (biaoShuEntity.getStatus() == 1){
+            throw new MyException("当前标书款已付款，无法删除！");
+        }
+        biaoShuDao.delete(biaoShuEntity);
+        log.info("删除标书款：{}", JSON.toJSONString(biaoShuEntity));
     }
 }
