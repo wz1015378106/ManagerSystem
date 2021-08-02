@@ -44,7 +44,7 @@ public class Result extends HashMap<String, Object> {
 
 
     /** * 成功对应代码 */
-    public static final int SUCCESS_CODE = 0;
+    public static final int SUCCESS_CODE = 200;
 
     /** * 警告对应代码 */
     public static final int WRANING_CODE = 2000;
